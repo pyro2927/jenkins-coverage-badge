@@ -27,6 +27,16 @@ Now you can get coverage badge with,
 ```
 ![coverage](http://d7.mnpk.org/jcb/jenkins/c/http/d7.mnpk.org/jenkins/job/goyo?style=flat-square)
 ```
+
+## Docker service
+
+Build the Docker image:
+
+    docker build -t nodejs-jenkins-coverage-badge .
+
+Run the Docker container in detached/daemon mode:
+
+    docker run -p 9913:9913 -d nodejs-jenkins-coverage-badge
  
 ## License
 MIT
