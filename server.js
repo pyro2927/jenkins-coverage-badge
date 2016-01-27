@@ -30,6 +30,7 @@ app.get('/jenkins/c/http/*', function(req,res) {
           }
           console.log('[GET] ' + '/jenkins/c/http/' + jurl)
           console.log('      generating badge(' + badge_url + ')')
+          res.setHeader('Cache-Control', 'no-cache');
           res.redirect(badge_url)
         }
       }
