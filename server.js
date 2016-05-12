@@ -5,9 +5,9 @@ var express = require('express')
 
 var app = express()
 
-app.get('/jenkins/c/http/*', function(req,res) {
+var handleResponse = function(schema, req, res) {
   var jurl = req.params[0]
-  var url = 'http://' + jurl + '/lastSuccessfulBuild/cobertura/api/json/?depth=2'
+  var url = schema + '://' + jurl + '/lastSuccessfulBuild/cobertura/api/json/?depth=2'
   request(url, function(err, response, body) {
     if (!err && response.statusCode == 200) {
       var elements = JSON.parse(body)['results']['elements']
@@ -28,21 +28,23 @@ app.get('/jenkins/c/http/*', function(req,res) {
           if (typeof style != 'undefined') {
             badge_url += '?style=' + style
           }
-          console.log('[GET] ' + '/jenkins/c/http/' + jurl)
-          console.log('      generating badge(' + badge_url + ')')
           res.setHeader('Expires', 'Tue, 15 Apr 1980 12:00:00 GMT');
           res.setHeader('Cache-Control', 'no-cache');
           res.redirect(badge_url)
         }
       }
     } else {
-      console.log(err)
       var badge_url = 'https://img.shields.io/badge/coverage-none-lightgrey.svg'
-      console.log('[GET] ' + '/jenkins/c/http/' + jurl)
-      console.log('      generating badge(' + badge_url + ')')
       res.redirect(badge_url)
     }
   })
+}
+
+app.get('/jenkins/c/http/*', function(req,res) {
+	handleResponse('http', req, res)
+})
+app.get('/jenkins/c/https/*', function(req,res) {
+	handleResponse('https', req, res)
 })
 
 var port = process.argv.slice(2)[0];
